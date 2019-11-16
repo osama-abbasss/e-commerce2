@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_title %}Waad Store{% endblock %}
+
+{% block extra_link %}
+   <link rel="stylesheet" href="{% static "css/price_rangs.css" %}">
+{% endblock %}
+
+{% block body_content %}
+
+   <section class="blog_area single-post-area section_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-lg-8 posts-list">
+
+               <div class="single-post">
+                  <div class="feature-img">
+                     <img class="img-fluid" src="{{post.img.url}}" alt="">
+                  </div>
+                  <div class="blog_details">
+                     <h2>{{post.title}}
+                     </h2>
+                     <ul class="blog-info-link mt-3 mb-4">
+                        <li><a href="#"><i class="far fa-user"></i> {{post.user.username}}</a></li>
+                     </ul>
+                     <p class="excert">
+
+                      {{ post.content|safe}}
+                     </p>
+
+                  </div>
+               </div>
+
+
+               <div class="comments-area">
+                  <h4>{{post.comments.count}} Comments</h4>
+                  {% for comment in post.comments.all %}
+
+                  <div class="comment-list">
+                     <div class="single-comment justify-content-between d-flex">
+                        <div class="user justify-content-between d-flex">
+                           <div class="thumb">
+                              <img src="img/comment/comment_3.png" alt="">
+                           </div>
+                           <div class="desc">
+                              <p class="comment">
+                                 {{comment.comment}}
+                              </p>
+                              <div class="d-flex justify-content-between">
+                                 <div class="d-flex align-items-center">
+                                    <h5>
+                                       <a href="#">{{comment.user.username}}</a>
+                                    </h5>
+                                    <p class="date">{{comment.created_at}}</p>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  {% endfor %}
+
+               </div>
+
+               <div class="comment-form">
+                  <h4>Leave a comment</h4>
+                  <form class="form-contact comment_form" action="." id="commentForm" method="post">
+                    {% csrf_token %}
+                     <div class="row">
+                        <div class="col-12">
+                           <div class="form-group">
+                            <!--  <textarea class="form-control w-100" name="comment" id="comment" cols="30" rows="9" #}
+                                 placeholder="Write Comment"></textarea> -->
+                                 {{ form }}
+                           </div>
+                        </div>
+
+                     </div>
+                     <div class="form-group mt-3">
+                        <input type="submit" class="btn_3 button-contactForm" value="comment">
+                     </div>
+                  </form>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </section>
+
+
+
+{% include "_instgrame_photo.html" %}
+  {% endblock %}

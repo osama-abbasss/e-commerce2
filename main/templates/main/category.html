@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_title %}Waad Store{% endblock %}
+
+{% block body_content %}
+
+
+    <section class="new_arrival  cat_product_area section_padding border_top">
+        <div class="container">
+            <div class="row ">
+                <div class="col-lg-3">
+                    <div class="left_sidebar_area">
+                        <aside class="left_widgets p_filter_widgets sidebar_box_shadow">
+                            <div class="l_w_title">
+                                <h3>Categories</h3>
+                            </div>
+                            <div class="arrival_filter_item filters">
+                                <ul>
+                                  <li class="active controls" data-filter="*" style="display:block; margin-bottom:7px">all</li>
+                                  <li class="controls" data-filter=".M" style="display:block; margin-bottom:7px">men</li>
+                                  <li class="controls" data-filter=".W" style="display:block; margin-bottom:7px">women</li>
+                                  <li class="controls" data-filter=".A" style="display:block; margin-bottom:7px">accessories</li>
+                                </ul>
+                            </div>
+                        </aside>
+
+                    </div>
+                </div>
+
+
+                <div class="col-lg-9">
+                  <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="product_top_bar d-flex justify-content-between align-items-center ">
+                                <div class="single_product_menu product_bar_item">
+                                    <h2>Happy Shipping</h2>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="new_arrival_iner">
+                        {% for item in item_list %}
+
+                          <div class="col-lg-4 col-sm-6">
+
+                              <div class="single_category_product">
+
+                                  <div class="single_category_img">
+
+                                    <div class=" mix {{ item.for_who }}">
+
+                                      <a href="{{item.get_absolute_url}}"><img src="{{ item.image.url }}" alt=""></a>
+
+                                      <div class="category_social_icon">
+                                          <ul>
+                                              <li><a href="{% url 'main:add_item' slug=item.slug %}"><i class="ti-bag"></i></a></li>
+                                          </ul>
+                                      </div>
+
+                                      <div class="category_product_text">
+                                          <a href="{{item.get_absolute_url}}"><h5>{{ item.title }}</h5></a>
+                                          <p>${{ item.new_price }}</p>
+                                      </div>
+
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        {% endfor %}
+
+                      </div>
+
+                    </div>
+                    <nav class="blog-pagination justify-content-center d-flex">
+                        <ul class="pagination">
+                          {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
+                                    <i class="ti-angle-left"></i>
+                                </a>
+                            {% endif %}
+                            </li>
+                            <li class="page-item active">
+                                <a href="" class="page-link">{{ page_obj.number }}</a>
+                            </li>
+
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+                                    <i class="ti-angle-right"></i>
+                                </a>
+                            {% endif %}
+                            </li>
+                        </ul>
+                    </nav>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+{% include '_free_shipping.html' %}
+{% include '_instgrame_photo.html' %}
+
+{% endblock %}

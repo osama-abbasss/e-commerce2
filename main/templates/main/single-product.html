@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_title %}{{item.title}}{% endblock %}
+
+{% block body_content %}
+
+  <div class="product_image_area section_padding">
+    <div class="container">
+      <div class="row s_product_inner">
+        <div class="col-lg-5">
+          <div class="product_slider_img">
+            <div id="vertical">
+              <div data-thumb="{{ item.image.url }}">
+                <img src="{{ item.image.url }}" alt="#">
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 offset-lg-1">
+          <div class="s_product_text">
+            <h3>{{ item.title }}</h3>
+            <h2>${{ item.new_price }}</h2>
+            <ul class="list">
+              {% if item.old_price %}
+              <li>
+                <a class="active" href="#">
+                  <span>old Price</span> : <b>${{ item.old_price }}</b></a>
+              </li>
+              {% endif %}
+              <li>
+                <a href="#">
+                  <span>Category</span> : {{ item.category }}</a>
+              </li>
+              <li>
+                <a href="#"> <span>Availibility</span> : {{ item.stock }} items </a>
+              </li>
+            </ul>
+            {% if item.old_price %}
+
+            {% endif %}
+            <div class="card_area">
+              <div class="product_count d-inline-block">
+                <span class="inumber-decrement"> <i class="ti-minus"></i></span>
+                <input class="input-number" type="text" value="1" min="0" max="10">
+                <span class="number-increment"> <i class="ti-plus"></i></span>
+              </div>
+              <div class="add_to_cart">
+                  <a href="{% url 'main:add_item' slug=item.slug%}" class="btn_3">add to cart</a>
+              </div>
+              <div class="social_icon">
+                  <a href="#" class="fb"><i class="ti-facebook"></i></a>
+                  <a href="#" class="tw"><i class="ti-twitter-alt"></i></a>
+                  <a href="#" class="li"><i class="ti-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--================End Single Product Area =================-->
+
+  <!--================Product Description Area =================-->
+  <section class="product_description_area">
+    <div class="container">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+            aria-selected="true">Description</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+            aria-selected="false">Specification</a>
+        </li>
+
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <p>
+            {{ item.description }}
+          </p>
+        </div>
+        <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <div class="table-responsive">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>
+                    <h5>Size</h5>
+                  </td>
+                  <td>
+                    <h5>{{ item.size }}</h5>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h5>Width</h5>
+                  </td>
+                  <td>
+                    <h5>{{item.width}}cm</h5>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h5>Height</h5>
+                  </td>
+                  <td>
+                    <h5>{{item.height}}cm</h5>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <h5>Weight</h5>
+                  </td>
+                  <td>
+                    <h5>{{item.weight}}gm</h5>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h5>Quality checking</h5>
+                  </td>
+                  <td>
+                    <h5>{{item.quality_checking}}</h5>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h5>Code</h5>
+                  </td>
+                  <td>
+                    <h5>{{item.code}}</h5>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--================End Product Description Area =================-->
+
+
+{% include '_free_shipping.html' %}
+
+{% include '_instgrame_photo.html' %}
+
+{% endblock %}

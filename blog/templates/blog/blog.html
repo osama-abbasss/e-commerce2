@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_title %}Waad Store{% endblock %}
+
+{% block body_content %}
+
+    <section class="blog_area section_padding">
+        <div class="container ">
+            <div class="row">
+
+                <div class="col-lg-10 ml-5 mb-5 mb-lg-0">
+                    <div class="blog_left_sidebar ml-5">
+
+                      {% for post in post_list %}
+
+
+                        <article class="blog_item">
+                            <div class="blog_item_img">
+                              {% if post.img %}
+                                <img class="card-img rounded-0" src="{{post.img.url}}" alt="">
+                              {% else %}
+                                <img class="card-img rounded-0" src="{% static "img/blog_static.jpg" %}" alt="">
+                              {% endif %}
+                                <a href="{{ post.get_absolute_url}}" class="blog_item_date">
+                                    <h3>{{post.post_at|date:'d'}}</h3>
+                                    <p>{{post.post_at|date:'M'}}</p>
+                                </a>
+                            </div>
+
+                            <div class="blog_details">
+                                <a class="d-inline-block" href="{{ post.get_absolute_url}}">
+                                    <h2>{{post.title}}</h2>
+                                </a>
+                                <p>{{post.description}}</p>
+                                <ul class="blog-info-link">
+                                    <li><a href="{{ post.get_absolute_url}}"><i class="far fa-user"></i> {{post.user.username}}</a></li>
+                                    <li><a href="{{ post.get_absolute_url}}"><i class="far fa-comments"></i> {{post.comments.count}} comments</a></li>
+
+                                </ul>
+                            </div>
+                        </article>
+
+                      {% endfor %}
+
+
+
+                        <nav class="blog-pagination justify-content-center d-flex">
+                            <ul class="pagination">
+                              {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
+                                        <i class="ti-angle-left"></i>
+                                    </a>
+                                {% endif %}
+                                </li>
+                                <li class="page-item active">
+                                    <a href="" class="page-link">{{ page_obj.number }}</a>
+                                </li>
+
+                                {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+                                        <i class="ti-angle-right"></i>
+                                    </a>
+                                {% endif %}
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

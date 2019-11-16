@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_title %}Waad Store{% endblock %}
+
+{% block body_content %}
+
+    <!-- banner part start-->
+    <section class="banner_part">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="banner_slider">
+                        <div class="single_banner_slider">
+                            <div class="banner_text">
+                                <div class="banner_text_iner">
+                                    <h5>Waad Fasion</h5>
+                                    <h1>Fashion Collection 2020</h1>
+                                    <a href="{% url 'main:item_list' %}" class="btn_1">shop now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- feature_part start-->
+    <section class="feature_part pt-4">
+        <div class="container-fluid p-lg-0 overflow-hidden">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-lg-4 col-sm-6">
+                    <div class="single_feature_post_text">
+                        <img src="{% static 'img/feature_1.png' %}" alt="#">
+                        <div class="hover_text">
+                            <a href="{% url 'main:item_list' %}" class="btn_2">shop for Men</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="single_feature_post_text">
+                        <img src="{% static 'img/feature_2.png' %}" alt="#">
+                        <div class="hover_text">
+                            <a href="{% url 'main:item_list' %}" class="btn_2">shop for Women</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="single_feature_post_text">
+                        <img src="{% static 'img/feature_3.png' %}" alt="#">
+                        <div class="hover_text">
+                            <a href="{% url 'main:item_list' %}" class="btn_2">shop for accessories</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- upcoming_event part start-->
+
+    <!-- new arrival part here -->
+    <section class="new_arrival section_padding">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="arrival_tittle">
+                        <h2>new arrival</h2>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="arrival_filter_item filters">
+                        <ul>
+                            <li class="active controls" data-filter="*">all</li>
+                            <li class="controls" data-filter=".M">men</li>
+                            <li class="controls" data-filter=".W">women</li>
+                            <li class="controls" data-filter=".A">accessories</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class=" col-md-12">
+
+                    <div class="new_arrival_iner ">
+                        {% for item in item_list %}
+                          {% if item.new_arrival %}
+                            <div class="single_arrivel_item col-4 mix {{ item.for_who }}">
+                                <img src="{{ item.image.url }}" alt="#">
+                                <div class="hover_text">
+                                    <a href="{{item.get_absolute_url}}"><p>{{ item.title }}</p></a>
+                                    <a href="{{item.get_absolute_url}}"><h3>{{ item.description|truncatewords:7 }}</h3></a>
+
+                                    <h5>${{ item.new_price }}</h5>
+                                    <div class="social_icon">
+                                        <a href="{% url 'main:add_item' item.slug %}"><i class="ti-bag"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- new arrival part end -->
+
+
+{% include '_free_shipping.html' %}
+{% include '_instgrame_photo.html' %}
+
+{% endblock %}
