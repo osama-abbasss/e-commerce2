@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import (ListView, DetailView, View)
+from django.views.generic import (ListView, DetailView, View, TemplateView)
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from .models import (Item,OrederItem ,Order,
-                    Address, Coupon)
-from .forms import (CheckoutForm, CouponForm)
+                    Address, Coupon, ClientMessage)
+from .forms import (CheckoutForm, CouponForm, ClientMessageForm)
 
 
 def is_valid_faild(values):
@@ -343,6 +343,48 @@ class CouponView(View):
 
 
 
-class PaymentView(ListView):
-    template_name = 'main/payment.html'
-    model = Item
+# class PaymentView(ListView):
+#     template_name = 'main/payment.html'
+
+
+
+class ClientMessageVeiw(View):
+    def get(self, *args, **kwargs):
+        return render(self.request,"main/contact.html", )
+
+    def post(self, *args, **kwargs):
+        form = ClientMessageForm(self.request.POST or None)
+        if form.is_valid():
+            message = form.cleaned_data.get('message')
+            name = form.cleaned_data.get('name')
+            email = form.cleaned_data.get('email')
+            subject = form.cleaned_data.get('subject')
+
+            print(message)
+            print(name)
+            print(email)
+            print(subject)
+
+            report = ClientMessage(
+                message =message,
+                name =name,
+                email =email,
+                subject =subject,
+            )
+            report.save()
+
+            messages.success(self.request, 'Thanks For Your message')
+            return redirect('main:home')
+
+
+class ConfirmatonView(View):
+    def get(self, *args, **kwargs):
+        try:
+            order = Order.objects.get(user = self.request.user)
+            context = { 'order':order,
+                        }
+            return render(self.request,"confirmation.html",context )
+
+        except ObjectDoesNotExist:
+            messages.info(self.request, 'you not have any orders')
+            return redirect('main:home')

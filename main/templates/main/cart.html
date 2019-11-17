@@ -2,6 +2,11 @@
 {% load static %}
 {% block head_title %}Cart Summry{% endblock %}
 
+{% block extra_link %}
+<link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+<link rel="stylesheet" href="{% static 'css/price_rangs.css' %}">
+{% endblock %}
+
 {% block body_content %}
 
   <section class="cart_area section_padding">
@@ -123,5 +128,7 @@
         </div>
       </div>
   </section>
+
+  {% block exstra_script %}<script src="{% static "js/jquery.nice-select.min.js" %}"></script>{% endblock %}
 
   {% endblock %}

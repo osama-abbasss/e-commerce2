@@ -27,11 +27,10 @@
                                     pages
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown_2">
-                                    <a class="dropdown-item" href="tracking.html">tracking</a>
-                                    <a class="dropdown-item" href="checkout.html">product checkout</a>
+                                    <a class="dropdown-item" href="{% url 'main:checkout' %}">product checkout</a>
                                     <a class="dropdown-item" href="{% url 'main:cart_summry' %}">shopping cart</a>
-                                    <a class="dropdown-item" href="confirmation.html">confirmation</a>
-                                    <a class="dropdown-item" href="elements.html">elements</a>
+                                    <a class="dropdown-item" href="{% url 'main:confirmation' %}">confirmation</a>
+
                                 </div>
                             </li>
 
@@ -41,7 +40,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">Contact</a>
+                                <a class="nav-link" href="{% url 'main:contact' %}">Contact</a>
                             </li>
                             {% if user.is_authenticated %}
                             <li class="nav-item">

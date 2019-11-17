@@ -46,3 +46,21 @@ class CouponForm(forms.Form):
                             'aria-label':"Recipient's username",
                             'aria-describedby':"button-addon2"
     }))
+
+
+
+
+class ClientMessageForm(forms.Form):
+    message = forms.CharField(widget=forms.TextInput(attrs={
+                            'class':'form-control w-100',
+                            'name':'message',
+                            'id':'message',
+                            'cols':'30',
+                            'rows':'9',
+                            'onfocus':'this.placeholder = ''',
+                            'onblur':"this.placeholder = 'Enter Message'",
+                            'placeholder':'Enter Message',
+    }))
+    name = forms.CharField(required=False)
+    email = forms.EmailField()
+    subject = forms.CharField(required=False)

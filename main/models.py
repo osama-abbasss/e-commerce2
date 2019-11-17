@@ -165,3 +165,15 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code
+
+
+
+class ClientMessage(models.Model):
+    message= models.TextField()
+    name = models.CharField(max_length=75)
+    email = models.EmailField()
+    subject = models.CharField(max_length= 235)
+    opened = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
