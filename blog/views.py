@@ -16,9 +16,10 @@ class PostListView(ListView):
     template_name = 'blog/blog.html'
 
 
-class PostDetailView(LoginRequiredMixin, DetailView):
+class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/single-blog.html'
+    comment_form = CommentForm()
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -29,7 +30,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     success_url = "/blog/"
 
 
-class PostEditeView(UpdateView):
+class PostEditeView(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'blog/create_blog.html'
     form_class = PostForm
@@ -39,30 +40,36 @@ class PostEditeView(UpdateView):
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'blog/delete_blog.html'
-
     success_url = reverse_lazy("/")
 
 
 
-
+@login_required
 def add_comment_to_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
-            comment = form.save(commit=False)
-            comment.user = request.user
-            comment.post = post
+            message = form.cleaned_data.get('comment')
+            comment = Comment(user = request.user,
+                                comment= message,
+                                post=post)
             comment.save()
             return redirect('blog:single_post', slug=slug)
     else:
         form = CommentForm()
 
     context = {'comment_form':form}
-    return render (request, 'blog/single-blog.html', context)
+    return render (request, 'blog/comment_form.html', context)
 
 
-# class CommentCreate(CreateView):
-#     model = Comment
-#     form_class = CommentForm
-#     template_name = 'blog/single-blog.html'
+
+class DetailView(View):
+    def get(self, *args, **kwargs):
+        post_qs = Post.objects.all()
+        post = Post.objects.filter(slug=post_qs.slug)
+
+        return render(self.request, 'blog/single-blog.html', context)
+
+    def post(self, *args, **kwargs):
+        pass

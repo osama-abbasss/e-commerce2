@@ -64,21 +64,21 @@
                </div>
 
                <div class="comment-form">
-                  <h4>Leave a comment</h4>
                   <form class="form-contact comment_form" action="." id="commentForm" method="post">
                     {% csrf_token %}
+                    <!--
                      <div class="row">
                         <div class="col-12">
                            <div class="form-group">
-                            <!--  <textarea class="form-control w-100" name="comment" id="comment" cols="30" rows="9" #}
-                                 placeholder="Write Comment"></textarea> -->
-                                 {{ form }}
+                              <textarea class="form-control w-100" name="comment" id="comment" cols="30" rows="9" #}
+                                 placeholder="Write Comment"></textarea>
                            </div>
                         </div>
-
+                        -->
                      </div>
                      <div class="form-group mt-3">
-                        <input type="submit" class="btn_3 button-contactForm" value="comment">
+
+                        <a class="btn_3 button-contactForm" href="{% url 'blog:comment_to_post' post.slug %}">Comment</a>
                      </div>
                   </form>
                </div>

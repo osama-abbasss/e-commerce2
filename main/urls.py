@@ -11,6 +11,7 @@ urlpatterns = [
     path('contact/', views.ClientMessageVeiw.as_view(), name = 'contact'),
     path('confirmation/', views.ConfirmatonView.as_view(), name = 'confirmation'),
 
+    path('test/', views.Test.as_view(), name = 'test'),
 
     path('add_item/<slug>/', views.add_item_to_cart, name = 'add_item'),
     path('remove_single_item/<slug>/', views.remove_single_item_from_cart, name = 'remove_single_item'),

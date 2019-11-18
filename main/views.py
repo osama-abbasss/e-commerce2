@@ -315,8 +315,7 @@ def get_coupon(request, code):
         return coupon
 
     except ObjectDoesNotExist:
-        messages.info(request, 'This coupon does not exist')
-        return redirect('main:cart_summry')
+        return None
 
 
 
@@ -328,11 +327,15 @@ class CouponView(View):
             try:
                 code = form.cleaned_data.get('code')
                 order = Order.objects.get(user= self.request.user, ordered=False)
-                order.coupon = get_coupon(self.request, code)
-                order.save()
-                messages.info(self.request, 'Added coupon successfuly ')
-                return redirect('main:cart_summry')
-
+                coupon = get_coupon(self.request, code)
+                if coupon:
+                    order.coupon = coupon
+                    order.save()
+                    messages.info(self.request, 'Added coupon successfuly ')
+                    return redirect('main:cart_summry')
+                else:
+                    messages.info(self.request, 'wrong code try again')
+                    return redirect('main:cart_summry')
 
             except ObjectDoesNotExist:
                 messages.info(self.request, 'Sorry you not have an active order')
@@ -375,6 +378,10 @@ class ClientMessageVeiw(View):
 
             messages.success(self.request, 'Thanks For Your message')
             return redirect('main:home')
+        else:
+            messages.error(self.request, 'sorry some thing wrong! try again')
+            return redirect('main:contact')
+
 
 
 class ConfirmatonView(View):
@@ -388,3 +395,7 @@ class ConfirmatonView(View):
         except ObjectDoesNotExist:
             messages.info(self.request, 'you not have any orders')
             return redirect('main:home')
+
+
+class Test(TemplateView):
+    template_name = 'tracking.html'
