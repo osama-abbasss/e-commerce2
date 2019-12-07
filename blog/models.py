@@ -4,6 +4,30 @@ from ckeditor.fields import RichTextField
 from django.utils import timezone
 from django.shortcuts import reverse
 from django.conf import settings
+from django.db.models import Q
+
+
+class PostQuerySet(models.QuerySet):
+    def search(self, query):
+        lookup = (
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(slug__icontains=query) |
+            Q(user__username__icontains=query)
+        )
+        return self.filter(lookup)
+
+
+class PostManager(models.Manager):
+
+    def get_queryset(self):
+        return PostQuerySet(self.model, using=self._db)
+
+
+    def search(self, query=None):
+        if query is None:
+            return self.queryset().none()
+        return self.get_queryset().search(query)
 
 
 
@@ -17,6 +41,8 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     post_at = models.DateTimeField(default=timezone.now)
     active = models.BooleanField(default=False)
+
+    objects = PostManager()
 
 
     def __str__(self):

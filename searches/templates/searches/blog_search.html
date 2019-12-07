@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_title %}Search {{query}}{% endblock %}
+
+{% block extra_link %}
+<style>
+.search_not_found{
+    margin: 10px auto;
+
+}
+
+.search_not_found h3{
+    color: #2F7DFC
+}
+
+</style>
+{% endblock %}
+
+{% block body_content %}
+
+
+
+    {% if blog_list  %}
+    
+    <section class="blog_area section_padding">
+        <div class="container ">
+            <div class="row">
+
+                <div class="col-lg-10 ml-5 mb-5 mb-lg-0">
+                    <div class="blog_left_sidebar ml-5">
+
+                      {% for post in blog_list %}
+
+                        
+                        <article class="blog_item">
+                            <div class="blog_item_img">
+                              {% if post.img %}
+                                <img class="card-img rounded-0" src="{{post.img.url}}" alt="">
+                              {% else %}
+                                <img class="card-img rounded-0" src="{% static "img/blog_static.jpg" %}" alt="">
+                              {% endif %}
+                                <a href="{{ post.get_absolute_url}}" class="blog_item_date">
+                                    <h3>{{post.post_at|date:'d'}}</h3>
+                                    <p>{{post.post_at|date:'M'}}</p>
+                                </a>
+                            </div>
+
+                            <div class="blog_details">
+                                <a class="d-inline-block" href="{{ post.get_absolute_url}}">
+                                    <h2>{{post.title}}</h2>
+                                </a>
+                                <p>{{post.description}}</p>
+                                <ul class="blog-info-link">
+                                    <li><a href="{{ post.get_absolute_url}}"><i class="far fa-user"></i> {{post.user.username}}</a></li>
+                                    <li><a href="{{ post.get_absolute_url}}"><i class="far fa-comments"></i> {{post.comments.count}} comments</a></li>
+
+                                </ul>
+                            </div>
+                        </article>
+
+                      {% endfor %}
+
+
+
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    {% else %}
+    <div class="container">
+        <div class='search_not_found mb-3'>
+            <p > Your search - <h3>{{query}}</h3>- did not match any documents.</p>
+            
+            <br>
+            <h3>Suggestions:</h3>
+            <ul>
+                <li>- Make sure that all words are spelled correctly.<li>
+                <li>- Try different keywords.<li>
+                <li>- Try more general keywords.<li>
+            </ul>
+
+
+        </div>
+    </div>
+
+    {% endif %}
+
+
+{% endblock %}
