@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
+    'rest_framework',
+
     'crispy_forms',
     'django_countries',
     'ckeditor',
@@ -162,3 +164,5 @@ SITE_ID = 1
 
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
+
+

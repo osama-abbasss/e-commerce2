@@ -9,6 +9,10 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
+    #rest_framework
+    path('api/blog/', include('blog.api.urls', namespace='api_blog')),
+
+
 
 
     path('', include('main.urls', namespace='main')),
