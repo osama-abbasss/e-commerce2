@@ -93,7 +93,7 @@ class OrederItem(models.Model):
 2- adding billing adress
 3- payment
 4- being delivered
-5- receved
+5- received
 6- refunds
 """
 class Order(models.Model):
@@ -161,6 +161,14 @@ class Payment(models.Model):
         return self.user.username
 
 
+class Refund(models.Model):
+    order     =  models.ForeignKey(Order, on_delete=models.CASCADE)
+    email    = models.EmailField()
+    reason   = models.TextField()
+    accepted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.order.ref_code}"
 
 
 

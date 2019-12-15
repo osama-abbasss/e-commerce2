@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import (Item, OrederItem , Order,
-                    Address, Coupon, ClientMessage)
+                    Address, Coupon,
+                     ClientMessage, Refund)
 
 
 #custom action hy3ml refund request Fales w y5la refund granted True
@@ -29,6 +30,7 @@ admin.site.register(Item)
 admin.site.register(OrederItem )
 admin.site.register(Order, OrderAdmin)
 
+admin.site.register(Refund)
 admin.site.register(Address)
 admin.site.register(Coupon)
 admin.site.register(ClientMessage)

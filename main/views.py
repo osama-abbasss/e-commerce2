@@ -6,8 +6,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from .models import (Item,OrederItem ,Order,
                     Address, Coupon,
-                    ClientMessage, Payment)
-from .forms import (CheckoutForm, CouponForm, ClientMessageForm)
+                    ClientMessage, Payment,
+                    Refund)
+from .forms import (CheckoutForm, CouponForm,
+                    ClientMessageForm, RefundForm)
 
 import random
 import string
@@ -16,7 +18,7 @@ stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 
 
 def create_ref_code():
-    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=25))
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
 
 
 def is_valid_faild(values):
@@ -394,6 +396,38 @@ class PaymentView(View):
         messages.warning(self.request, "Invalid data received")
         return redirect("/payment/stripe/")
 
+
+
+class RefundView(View):
+    def get(self, *args, **kwargs):
+        form = RefundForm()
+        context = {'form':form}
+
+        return render(self.request, 'main/request_refund.html', context)
+
+    def post(self, *args, **kwargs):
+        form = RefundForm(self.request.POST)
+        if form.is_valid():
+            ref_code = form.cleaned_data.get('ref_code')
+            email = form.cleaned_data.get('email')
+            reason = form.cleaned_data.get('reason')
+
+            try:
+                order = Order.objects.get(ref_code=ref_code)
+                order.refund_requested = True
+                order.save()
+
+                refund = Refund()
+                refund.order = order
+                refund.email = email
+                refund.reason = reason
+                refund.accepted = True
+                refund.save()
+                messages.info(self.request, "request received ")
+                return redirect("/")
+            except ObjectDoesNotExist:
+                messages.warning(self.request, "Some Thing wrong Plz try again")
+                return redirect("main:request_refund")
 
 def get_coupon(request, code):
     try:

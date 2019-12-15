@@ -64,3 +64,10 @@ class ClientMessageForm(forms.Form):
     name = forms.CharField(required=False)
     email = forms.EmailField()
     subject = forms.CharField(required=False)
+
+
+
+class RefundForm(forms.Form):
+    ref_code = forms.CharField()
+    email = forms.EmailField()
+    reason = forms.CharField(widget=forms.Textarea())
