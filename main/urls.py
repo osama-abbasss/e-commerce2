@@ -11,14 +11,13 @@ urlpatterns = [
     path('contact/', views.ClientMessageVeiw.as_view(), name = 'contact'),
     path('confirmation/', views.ConfirmatonView.as_view(), name = 'confirmation'),
 
-    path('test/', views.Test.as_view(), name = 'test'),
 
     path('add_item/<slug>/', views.add_item_to_cart, name = 'add_item'),
     path('remove_single_item/<slug>/', views.remove_single_item_from_cart, name = 'remove_single_item'),
     path('remove_item/<slug>/', views.remove_item_from_cart, name = 'remove_item'),
 
     path('checkout/', views.CheckoutView.as_view(), name= 'checkout'),
-    # path('payment/<payment_option>/', views.PaymentView.as_view(), name= 'payment'),
+    path('payment/<payment_option>/', views.PaymentView.as_view(), name= 'payment'),
     path('add_coupon/', views.CouponView.as_view(), name= 'add_coupon'),
 
 

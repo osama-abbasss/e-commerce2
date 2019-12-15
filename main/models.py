@@ -70,7 +70,7 @@ class OrederItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
 
-    quantity = models.IntegerField(default=1)
+    quantity  = models.IntegerField(default=1)
     ordered   = models.BooleanField(default=False)
 
 
@@ -88,7 +88,14 @@ class OrederItem(models.Model):
             return 0
 
 
-
+"""
+1- add item to cart
+2- adding billing adress
+3- payment
+4- being delivered
+5- receved
+6- refunds
+"""
 class Order(models.Model):
     user  = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrederItem )
@@ -103,6 +110,9 @@ class Order(models.Model):
                                         on_delete=models.SET_NULL, blank=True, null=True)
     billing_address  = models.ForeignKey('Address', related_name="billing_address",
                                         on_delete=models.SET_NULL, blank=True, null=True)
+
+    payment          = models.ForeignKey('Payment',on_delete=models.SET_NULL,
+                                        blank=True, null=True)
 
     coupon = models.ForeignKey('Coupon', on_delete=models.CASCADE, blank=True, null=True)
 
@@ -137,6 +147,20 @@ class Order(models.Model):
             total -= self.coupon.amount
 
         return total
+
+
+class Payment(models.Model):
+    stripe_charges_id = models.CharField(max_length= 50)
+    user              = models.ForeignKey(User, on_delete=models.SET_NULL,
+                        blank=True, null=True)
+    amount            = models.FloatField()
+    timetemp          = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return self.user.username
+
+
 
 
 

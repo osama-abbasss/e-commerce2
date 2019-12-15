@@ -5,8 +5,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from .models import (Item,OrederItem ,Order,
-                    Address, Coupon, ClientMessage)
+                    Address, Coupon,
+                    ClientMessage, Payment)
 from .forms import (CheckoutForm, CouponForm, ClientMessageForm)
+
+import random
+import string
+import stripe
+stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+
+
+def create_ref_code():
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=25))
 
 
 def is_valid_faild(values):
@@ -82,7 +92,8 @@ def add_item_to_cart(request, slug):
 
     else:
         order = Order.objects.create(user=request.user)
-        order.items.add(request, 'Added item to cart')
+        order.items.add(order_item)
+        messages.info(request, "This item was added to your cart.")
 
     return redirect('main:item_detail', slug=slug)
 
@@ -309,6 +320,81 @@ class CheckoutView(View):
 
 
 
+class PaymentView(View):
+    def get(self, *args, **kwargs):
+        order = Order.objects.get(user = self.request.user, ordered=False)
+        return render(self.request, 'main/payment.html')
+
+    def post(self, *args, **kwargs):
+        order = Order.objects.get(user= self.request.user, ordered=False)
+        token = self.request.POST.get('stripeToken')
+        order_amount= int(order.get_total()* 100)
+
+        test_token = stripe.Token.create(card={
+        "number": '4242424242424242',
+        "exp_month": 12,
+        "exp_year": 2056,
+        "cvc": '123'})
+
+        try:
+            # `source` is obtained with Stripe.js; see https://stripe.com/docs/payments/accept-a-payment-charges#web-create-token
+            charge = stripe.Charge.create(
+              amount=order_amount,
+              currency="usd",
+              source=test_token,
+            )
+
+            # create the payment
+            payment = Payment()
+            payment.stripe_charges_id = charge['id']
+            payment.user = self.request.user
+            payment.amount = order.get_total()
+            payment.save()
+
+            #assign payment to the order
+            order.ordered =True
+            order.payment = payment
+            order.ref_code = create_ref_code()
+            order.save()
+
+            messages.success(self.request, "Your order was successful!")
+            return redirect("/")
+
+        except stripe.error.CardError as e:
+            body = e.json_body
+            err = body.get('error', {})
+            messages.warning(self.request, f"{err.get('message')}")
+            return redirect("/payment/stripe/")
+
+        except stripe.error.RateLimitError as e:
+            # Too many requests made to the API too quickly
+            messages.warning(self.request, "Rate limit error")
+            return redirect("/payment/stripe/")
+
+        except stripe.error.InvalidRequestError as e:
+            messages.warning(self.request, "Invalid parameters")
+            return redirect("/payment/stripe/")
+
+        except stripe.error.AuthenticationError as e:
+            messages.warning(self.request, "Not authenticated")
+            return redirect("/payment/stripe/")
+
+        except stripe.error.APIConnectionError as e:
+            messages.warning(self.request, "Network error")
+            return redirect("/payment/stripe/")
+
+        except stripe.error.StripeError as e:
+            messages.warning(self.request, "Something went wrong. You were not charged. Please try again")
+            return redirect("/payment/stripe/")
+
+        except Exception as e:
+            messages.warning(self.request, "A serious error occurred. We have been notifed.")
+            return redirect("/payment/stripe/")
+
+        messages.warning(self.request, "Invalid data received")
+        return redirect("/payment/stripe/")
+
+
 def get_coupon(request, code):
     try:
         coupon = Coupon.objects.get(code=code)
@@ -344,10 +430,6 @@ class CouponView(View):
 
 
 
-
-
-# class PaymentView(ListView):
-#     template_name = 'main/payment.html'
 
 
 
@@ -395,7 +477,3 @@ class ConfirmatonView(View):
         except ObjectDoesNotExist:
             messages.info(self.request, 'you not have any orders')
             return redirect('main:home')
-
-
-class Test(TemplateView):
-    template_name = 'tracking.html'

@@ -6,19 +6,22 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework import filters
+from rest_framework.pagination import PageNumberPagination
 
 from rest_framework.permissions import IsAdminUser
 
-from .serializers import PostSerializer
+from .serializers import PostSerializer, UpdatePostSerializer
 from blog.models import Post
 
 
-class PsotList(APIView):
+class PostList(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
-    def get(self, request, format=None):
-        posts = Post.objects.all()
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
+    pagination_class=PageNumberPagination
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'content', 'user__username', 'slug', ]
 
 
 @api_view(['GET'])
@@ -36,7 +39,7 @@ def post_detail_api_view(request, slug):
 class PostUpdateView( mixins.UpdateModelMixin, generics.GenericAPIView):
     permission_classes = [IsAdminUser]
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = UpdatePostSerializer
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
