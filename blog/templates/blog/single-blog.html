@@ -22,6 +22,10 @@
                      </h2>
                      <ul class="blog-info-link mt-3 mb-4">
                         <li><a href="#"><i class="far fa-user"></i> {{post.user.username}}</a></li>
+                        {% if request.user.is_staff %}
+                        <li><a href="{% url 'blog:edite_post' post.slug %}"><i class="far fa-edit"></i> Edit</a></li>
+                        <li><a href="{% url 'blog:delete_post' post.slug %}"><i class="fas fa-trash-alt"></i> delete</a></li>
+                        {% endif %}
                      </ul>
                      <p class="excert">
 
